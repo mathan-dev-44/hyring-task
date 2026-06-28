@@ -173,7 +173,8 @@ export default function Board() {
   return (
     <>
       <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {" "}
           {COLUMNS.map((col) => {
             const columnCards = cards.filter((c: any) => c.status === col);
 
