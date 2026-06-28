@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import Column from "./column";
-import Modal from "./modal/modal";
 import { CardType } from "./card";
 
 import {
@@ -14,7 +13,6 @@ import {
   useUpdateCard,
 } from "@/hooks/usecards";
 
-import { socket } from "@/lib/socket";
 import { closestCorners, DndContext, DragEndEvent } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -41,14 +39,6 @@ export default function Board() {
   const deleteCard = useDeleteCard();
   const createCard = useCreateCard();
 
-  // const [selectedCard, setSelectedCard] = useState<CardType | null>(null);
-
-  // const [editModal, setEditModal] = useState<boolean>(false);
-
-  // const [deleteModal, setDeleteModal] = useState<boolean>(false);
-
-  // const [createModal, setCreateModal] = useState<boolean>(false);
-
   const [title, setTitle] = useState<string>("");
   const [newTitle, setNewTitle] = useState<string>("");
 
@@ -71,37 +61,6 @@ export default function Board() {
     createModal,
     setCreateModal,
   } = useCardModals();
-
-  // useEffect(() => {
-  //   const onCreate = (card: CardType) => {
-  //     queryClient.setQueryData<CardType[]>(["cards"], (old = []) => [
-  //       ...old,
-  //       card,
-  //     ]);
-  //   };
-
-  //   const onUpdate = (updated: CardType) => {
-  //     queryClient.setQueryData<CardType[]>(["cards"], (old = []) =>
-  //       old.map((c) => (c.id === updated.id ? updated : c)),
-  //     );
-  //   };
-
-  //   const onDelete = ({ id }: { id: string }) => {
-  //     queryClient.setQueryData<CardType[]>(["cards"], (old = []) =>
-  //       old.filter((c) => c.id !== id),
-  //     );
-  //   };
-
-  //   socket.on("card:created", onCreate);
-  //   socket.on("card:updated", onUpdate);
-  //   socket.on("card:deleted", onDelete);
-
-  //   return () => {
-  //     socket.off("card:created", onCreate);
-  //     socket.off("card:updated", onUpdate);
-  //     socket.off("card:deleted", onDelete);
-  //   };
-  // }, [queryClient]);
 
   useEffect(() => {
     if (!selectedCard) return;
@@ -275,127 +234,6 @@ export default function Board() {
           setNewTitle("");
         }}
       />
-
-      {/* Edit Modal */}
-      {/* 
-      <Modal
-        open={editModal}
-        title="Edit Card"
-        onClose={() => {
-          setEditModal(false);
-          setSelectedCard(null);
-        }}
-        footer={
-          <>
-            <button
-              onClick={() => setEditModal(false)}
-              className="rounded border cursor-pointer px-4 py-2 text-zinc-600"
-            >
-              Cancel
-            </button>
-
-            <button
-              onClick={handleEdit}
-              className="rounded cursor-pointer bg-green-600 px-4 py-2 text-white"
-            >
-              Save
-            </button>
-          </>
-        }
-      >
-        <div className="space-y-4">
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded border p-3 text-zinc-800 outline-none focus:outline-none p-3 text-zinc-800"
-          />
-
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as CardType["status"])}
-            className="w-full rounded cursor-pointer border p-3 text-zinc-800 outline-none"
-          >
-            <option value="todo">To Do</option>
-            <option value="in_progress">In Progress</option>
-            <option value="done">Done</option>
-          </select>
-        </div>
-      </Modal> */}
-
-      {/* Delete Modal */}
-
-      {/* <Modal
-        open={deleteModal}
-        title="Delete Card"
-        onClose={() => {
-          setDeleteModal(false);
-          setSelectedCard(null);
-        }}
-        footer={
-          <>
-            <button
-              onClick={() => setDeleteModal(false)}
-              className="rounded border cursor-pointer px-4 py-2"
-            >
-              Cancel
-            </button>
-
-            <button
-              onClick={handleDelete}
-              className="rounded cursor-pointer bg-red-600 px-4 py-2 text-white"
-            >
-              Delete
-            </button>
-          </>
-        }
-      >
-        <p>Delete "{selectedCard?.title}" ?</p>
-      </Modal> */}
-      {/* 
-      <Modal
-        open={createModal}
-        title="Create Card"
-        onClose={() => {
-          setCreateModal(false);
-          setNewTitle("");
-        }}
-        footer={
-          <>
-            <button
-              onClick={() => setCreateModal(false)}
-              className="rounded cursor-pointer border px-4 py-2 text-zinc-600"
-            >
-              Cancel
-            </button>
-
-            <button
-              onClick={handleCreate}
-              className="rounded bg-green-600 cursor-pointer px-4 py-2 text-white"
-            >
-              Create
-            </button>
-          </>
-        }
-      >
-        <div className="space-y-4">
-          <input
-            placeholder="Card title"
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
-            className="w-full rounded border    p-3 text-zinc-800"
-          />
-
-          <select
-            value={newStatus}
-            onChange={(e) => setNewStatus(e.target.value as CardType["status"])}
-            className="w-full rounded cursor-pointer border p-3 text-zinc-800"
-          >
-            <option value="todo">To Do</option>
-            <option value="in_progress">In Progress</option>
-            <option value="done">Done</option>
-          </select>
-        </div>
-      </Modal> */}
     </>
   );
 }
