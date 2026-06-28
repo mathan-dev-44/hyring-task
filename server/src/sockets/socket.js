@@ -2,7 +2,9 @@ import { Server } from "socket.io";
 
 let io;
 
-export const socketServer = (server) => {
+const onlineUsers = new Map();
+
+export const initSocket = (server) => {
   io = new Server(server, {
     cors: {
       origin: process.env.CLIENT_URL,
@@ -11,7 +13,7 @@ export const socketServer = (server) => {
   });
 
   io.on("connection", (socket) => {
-    const userId = socket?.handshake?.auth?.userId || socket.id;
+    const userId = socket.handshake.auth?.userId || socket.id;
 
     if (!onlineUsers.has(userId)) {
       onlineUsers.set(userId, new Set());
@@ -19,6 +21,7 @@ export const socketServer = (server) => {
     onlineUsers.get(userId).add(socket.id);
 
     io.emit("users:online", Array.from(onlineUsers.keys()));
+    console.log("connected:", socket.id);
 
     socket.on("disconnect", () => {
       console.log("Disconnected:", socket.id);
@@ -40,4 +43,4 @@ export const socketServer = (server) => {
   return io;
 };
 
-export const getSocket = () => io;
+export const getIO = () => io;

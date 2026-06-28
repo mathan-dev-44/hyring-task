@@ -1,5 +1,5 @@
 import { prisma } from "../db/prisma.js";
-import { getSocket } from "../sockets/socket.js";
+import { getIO } from "../sockets/socket.js";
 
 export const getCards = async (req, res) => {
   const cards = await prisma.card.findMany();
@@ -14,11 +14,13 @@ export const createCard = async (req, res) => {
       position: 0,
     },
   });
-  getSocket().emit("card:created", card);
+  getIO().emit("card:created", card);
   res.json(card);
 };
 
 export const updateCard = async (req, res) => {
+  console.time("updateCard");
+
   const card = await prisma.card.update({
     where: {
       id: req.params.id,
@@ -29,7 +31,10 @@ export const updateCard = async (req, res) => {
       position: req.body.position,
     },
   });
-  getSocket().emit("card:updated", card);
+  getIO().emit("card:updated", card);
+
+  console.timeEnd("updateCard");
+
   res.json(card);
 };
 export const deleteCard = async (req, res) => {
@@ -41,7 +46,7 @@ export const deleteCard = async (req, res) => {
     },
   });
 
-  getSocket().except(socketId).emit("card:deleted", {
+  getIO().except(socketId).emit("card:deleted", {
     id: req.params.id,
   });
 
