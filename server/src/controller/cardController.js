@@ -19,8 +19,6 @@ export const createCard = async (req, res) => {
 };
 
 export const updateCard = async (req, res) => {
-  console.time("updateCard");
-
   const card = await prisma.card.update({
     where: {
       id: req.params.id,
@@ -32,8 +30,6 @@ export const updateCard = async (req, res) => {
     },
   });
   getIO().emit("card:updated", card);
-
-  console.timeEnd("updateCard");
 
   res.json(card);
 };
